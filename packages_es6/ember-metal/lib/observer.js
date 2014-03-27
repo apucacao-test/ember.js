@@ -106,4 +106,8 @@ function removeBeforeObserver(obj, _path, target, method) {
   return this;
 };
 
+function changeEvent(keyName) {
+  return keyName+AFTER_OBSERVERS;
+}
+
 export {addObserver, observersFor, removeObserver, addBeforeObserver, _suspendBeforeObserver, _suspendObserver,_suspendBeforeObservers, _suspendObservers, beforeObserversFor, removeBeforeObserver};
