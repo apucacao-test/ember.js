@@ -5,6 +5,20 @@ import {listenersFor, addListener, removeListener, suspendListeners, suspendList
 @module ember-metal
 */
 
+function _suspendObserver(obj, path, target, method, callback) {
+  return suspendListener(obj, changeEvent(path), target, method, callback);
+};
+
+function _suspendBeforeObservers(obj, paths, target, method, callback) {
+  var events = map.call(paths, beforeEvent);
+  return suspendListeners(obj, events, target, method, callback);
+};
+
+function _suspendObservers(obj, paths, target, method, callback) {
+  var events = map.call(paths, changeEvent);
+  return suspendListeners(obj, events, target, method, callback);
+};
+
 var AFTER_OBSERVERS = ':change',
     BEFORE_OBSERVERS = ':before';
 
