@@ -5,6 +5,33 @@ import {propertyWillChange, propertyDidChange} from "ember-metal/property_events
 import {defineProperty} from "ember-metal/properties";
 import EmberError from "ember-metal/error";
 
+function setPath(root, path, value, tolerant) {
+  var keyName;
+
+  // get the last part of the path
+  keyName = path.slice(path.lastIndexOf('.') + 1);
+
+  // get the first part of the part
+  path    = (path === keyName) ? keyName : path.slice(0, path.length-(keyName.length+1));
+
+  // unless the path is this, look up the first part to
+  // get the root
+  if (path !== 'this') {
+    root = getPath(root, path);
+  }
+
+  if (!keyName || keyName.length === 0) {
+    throw new EmberError('Property set failed: You passed an empty path');
+  }
+
+  if (!root) {
+    if (tolerant) { return; }
+    else { throw new EmberError('Property set failed: object in path "'+path+'" could not be found or was destroyed.'); }
+  }
+
+  return set(root, keyName, value);
+}
+
 var MANDATORY_SETTER = Ember.ENV.MANDATORY_SETTER,
     IS_GLOBAL = /^([A-Z$]|([0-9][A-Z$]))/;
 
